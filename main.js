@@ -50,6 +50,9 @@ const operations = document.querySelector("#operations")
 
 const longScreen = document.querySelector("#longScreen")
 
+const clear = document.querySelector("#clear")
+
+
 //Event listener to carry out a function if numbers is click 
 numbers.forEach((number) => number.addEventListener("click",(e)=>{
     handleNumber(e.target.value)
@@ -75,6 +78,16 @@ operations.addEventListener("click",()=>{
     finalResult = operation(array[0],array[1],currentValue)
     //Display result at the screen
     screen.value = finalResult
+})
+
+clear.addEventListener("click",()=>{
+    array = []
+    ops = ""
+    previousValue = ""
+    currentValue = ""
+    finalResult = ""
+    screen.value = ""
+    longScreen.value = ""
 })
 
 function handleNumber(num){
