@@ -38,7 +38,7 @@ let array = []
 let ops = ""
 let previousValue = ""
 let currentValue = ""
-let finalResult = ""
+let finalResult = 0
 let decimalValue = ""
 
 const numbers = document.querySelectorAll("#numbers")
@@ -64,14 +64,20 @@ numbers.forEach((number) => number.addEventListener("click",(e)=>{
 
 //Event listener to carry out a function if operator is click 
 operators.forEach((operator) => operator.addEventListener("click", (e)=>{
-    handleOps(e.target.value)
+    // If there is an existing equation such as "4-5" and the operators is click on again, it will continue the equation if a new number is type in
+    if(!finalResult && longScreen.value && screen.value){
+        finalResult = operation(array[0],array[1],currentValue)
+        screen.value = currentValue
+        longScreen.value = finalResult + e.target.value
+        console.log(finalResult,array,currentValue,previousValue)
+    }
+
+    else{handleOps(e.target.value)
     array.push(currentValue)
-    //Display the previous Number until a new number is click on
-    screen.value = previousValue
     //Display the current full equation
     longScreen.value = previousValue + currentValue
     //check for the array value to ensure all is in order
-    console.log(array)
+    console.log(array)}
 }))
 
 //Event listener to carry out a function if "=" is click 
@@ -81,6 +87,8 @@ operations.addEventListener("click",()=>{
         longScreen.value = finalResult + array[1] + array [2]
         finalResult = operation(finalResult,array[1],array[2])
         screen.value=finalResult
+        console.log(array)
+        console.log(previousValue)
     }
     else{
     // Display the full equation
@@ -124,9 +132,11 @@ function handleOps(ops){
     if(array.length > 1){
         currentValue = ops
         array.pop()
+        screen.value = ""
     }
     else{previousValue = currentValue
     array.push(previousValue)
-    currentValue = ops}
+    currentValue = ops
+    screen.value =""}
 }
 
