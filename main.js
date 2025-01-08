@@ -39,6 +39,7 @@ let ops = ""
 let previousValue = ""
 let currentValue = ""
 let finalResult = ""
+let decimalValue = ""
 
 const numbers = document.querySelectorAll("#numbers")
 
@@ -51,6 +52,8 @@ const operations = document.querySelector("#operations")
 const longScreen = document.querySelector("#longScreen")
 
 const clear = document.querySelector("#clear")
+
+const decimal = document.querySelector("#decimal")
 
 
 //Event listener to carry out a function if numbers is click 
@@ -73,11 +76,21 @@ operators.forEach((operator) => operator.addEventListener("click", (e)=>{
 
 //Event listener to carry out a function if "=" is click 
 operations.addEventListener("click",()=>{
+    // check if there is a finalResult, and if "=" is press again, use the recent finalResult and carry out the equation again
+    if(finalResult){
+        longScreen.value = finalResult + array[1] + array [2]
+        finalResult = operation(finalResult,array[1],array[2])
+        screen.value=finalResult
+    }
+    else{
     // Display the full equation
     longScreen.value = array.join("") + currentValue
     finalResult = operation(array[0],array[1],currentValue)
     //Display result at the screen
     screen.value = finalResult
+    array.push(currentValue)
+    }
+
 })
 
 clear.addEventListener("click",()=>{
@@ -88,6 +101,11 @@ clear.addEventListener("click",()=>{
     finalResult = ""
     screen.value = ""
     longScreen.value = ""
+})
+
+decimal.addEventListener("click",()=>{
+   currentValue = currentValue+"."
+   screen.value = currentValue
 })
 
 function handleNumber(num){
