@@ -67,36 +67,44 @@ operators.forEach((operator) => operator.addEventListener("click", (e)=>{
     // If there is an existing equation such as "4-5" and the operators is click on again, it will continue the equation if a new number is type in
     if(!finalResult && longScreen.value && screen.value){
         finalResult = operation(array[0],array[1],currentValue)
-        screen.value = currentValue
         longScreen.value = finalResult + e.target.value
-        console.log(finalResult,array,currentValue,previousValue)
+        screen.value = finalResult
+        previousValue = 1
+        array[0] = finalResult
+        array[1] = e.target.value
+    }
+
+    else if(finalResult && longScreen.value && screen.value){
+        finalResult = operation(array[0],array[1],currentValue)
+        longScreen.value = finalResult + e.target.value
+        screen.value = finalResult
+        previousValue = 1
+        array[0] = finalResult
+        array[1] = e.target.value
     }
 
     else{handleOps(e.target.value)
     array.push(currentValue)
     //Display the current full equation
-    longScreen.value = previousValue + currentValue
+    longScreen.value = previousValue + currentValue}
     //check for the array value to ensure all is in order
-    console.log(array)}
 }))
 
 //Event listener to carry out a function if "=" is click 
 operations.addEventListener("click",()=>{
     // check if there is a finalResult, and if "=" is press again, use the recent finalResult and carry out the equation again
     if(finalResult){
-        longScreen.value = finalResult + array[1] + array [2]
-        finalResult = operation(finalResult,array[1],array[2])
+        longScreen.value = array[0] + array[1] + currentValue
+        finalResult = operation(array[0],array[1],currentValue)
         screen.value=finalResult
-        console.log(array)
-        console.log(previousValue)
+        array[0] = finalResult
     }
+    
     else{
-    // Display the full equation
-    longScreen.value = array.join("") + currentValue
     finalResult = operation(array[0],array[1],currentValue)
-    //Display result at the screen
+    longScreen.value = array[0] + array[1]
     screen.value = finalResult
-    array.push(currentValue)
+    array[0] = finalResult
     }
 
 })
@@ -131,7 +139,7 @@ function handleOps(ops){
     // Check if there is an existing operator, if so replace it in array and longScreen as well
     if(array.length > 1){
         currentValue = ops
-        array.pop()
+        array[1] = currentValue
         screen.value = ""
     }
     else{previousValue = currentValue
@@ -139,4 +147,5 @@ function handleOps(ops){
     currentValue = ops
     screen.value =""}
 }
+
 
