@@ -40,6 +40,8 @@ let previousValue = ""
 let currentValue = ""
 let finalResult = 0
 let decimalValue = ""
+let equal = ""
+let repeatEqual = ""
 
 const numbers = document.querySelectorAll("#numbers")
 
@@ -60,53 +62,64 @@ const decimal = document.querySelector("#decimal")
 numbers.forEach((number) => number.addEventListener("click",(e)=>{
     handleNumber(e.target.value)
     screen.value = currentValue
+    repeatEqual = ""
 }))
 
 //Event listener to carry out a function if operator is click 
 operators.forEach((operator) => operator.addEventListener("click", (e)=>{
     // If there is an existing equation such as "4-5" and the operators is click on again, it will continue the equation if a new number is type in
-    if(!finalResult && longScreen.value && screen.value){
+    if(!finalResult && longScreen.value && screen.value && equal == ""){
         finalResult = operation(array[0],array[1],currentValue)
         longScreen.value = finalResult + e.target.value
         screen.value = finalResult
         previousValue = 1
         array[0] = finalResult
         array[1] = e.target.value
+        equal = ""
+        repeatEqual = "" 
     }
 
-    else if(finalResult && longScreen.value && screen.value){
+    else if(finalResult && longScreen.value && screen.value && equal == ""){
         finalResult = operation(array[0],array[1],currentValue)
         longScreen.value = finalResult + e.target.value
         screen.value = finalResult
         previousValue = 1
         array[0] = finalResult
         array[1] = e.target.value
+        equal = ""
+        repeatEqual = ""
     }
 
-    else{handleOps(e.target.value)
+    else if (equal == "=" || !finalResult){handleOps(e.target.value)
     array.push(currentValue)
     //Display the current full equation
-    longScreen.value = previousValue + currentValue}
+    longScreen.value = array[0] + currentValue
     //check for the array value to ensure all is in order
+    repeatEqual = ""
+    console.log(array)}
 }))
 
 //Event listener to carry out a function if "=" is click 
 operations.addEventListener("click",()=>{
     // check if there is a finalResult, and if "=" is press again, use the recent finalResult and carry out the equation again
-    if(finalResult){
-        longScreen.value = array[0] + array[1] + currentValue
+    if(repeatEqual = "yes"){
+        longScreen.value = array[0] + array[1] + currentValue + "="
         finalResult = operation(array[0],array[1],currentValue)
         screen.value=finalResult
         array[0] = finalResult
+        finalResult = ""
+        equal = "="
     }
     
     else{
-    finalResult = operation(array[0],array[1],currentValue)
-    longScreen.value = array[0] + array[1]
-    screen.value = finalResult
-    array[0] = finalResult
+        finalResult = operation(array[0],array[1],currentValue)
+        longScreen.value = array[0] + array[1] + currentValue + "="
+        screen.value = finalResult
+        array[0] = finalResult
+        finalResult = ""
+        equal = "="
+        repeatEqual = "yes"
     }
-
 })
 
 clear.addEventListener("click",()=>{
@@ -115,6 +128,7 @@ clear.addEventListener("click",()=>{
     previousValue = ""
     currentValue = ""
     finalResult = ""
+    equal = ""
     screen.value = ""
     longScreen.value = ""
 })
