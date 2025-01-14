@@ -36,10 +36,9 @@ function operation(numA,op,numB){
 
 let array = []
 let ops = ""
-let previousValue = ""
+let valueForRepeteadEqual = ""
 let currentValue = ""
-let finalResult = 0
-let decimalValue = ""
+let finalResult = ""
 let equal = ""
 let repeatEqual = ""
 
@@ -65,58 +64,62 @@ numbers.forEach((number) => number.addEventListener("click",(e)=>{
     repeatEqual = ""
 }))
 
-//Event listener to carry out a function if operator is click 
 operators.forEach((operator) => operator.addEventListener("click", (e)=>{
+
+    // The first time an operator is pressed on
+    if (currentValue && !longScreen.value){
+        handleOps(e.target.value)
+        //Display the current full equation
+        longScreen.value = array[0] + array[1]
+        //check for the array value to ensure all is in order
+        repeatEqual = ""
+    }
+
+    // Change the operators in the end if there is a number infront
+    else if (!currentValue && array.length == 2){
+        handleOps(e.target.value)
+        //Display the current full equation
+        longScreen.value = array[0] + array[1]
+        //check for the array value to ensure all is in order
+        repeatEqual = ""
+        console.log(array)
+    }
+
     // If there is an existing equation such as "4-5" and the operators is click on again, it will continue the equation if a new number is type in
-    if(!finalResult && longScreen.value && screen.value && equal == ""){
+    else if(array.length ==2 && currentValue){
         finalResult = operation(array[0],array[1],currentValue)
-        longScreen.value = finalResult + e.target.value
         screen.value = finalResult
-        previousValue = 1
         array[0] = finalResult
-        array[1] = e.target.value
+        handleOps(e.target.value)
+        longScreen.value = finalResult + array[1]
         equal = ""
         repeatEqual = "" 
     }
 
-    else if(finalResult && longScreen.value && screen.value && equal == ""){
-        finalResult = operation(array[0],array[1],currentValue)
-        longScreen.value = finalResult + e.target.value
-        screen.value = finalResult
-        previousValue = 1
-        array[0] = finalResult
-        array[1] = e.target.value
-        equal = ""
-        repeatEqual = ""
-    }
 
-    else if (equal == "=" || !finalResult){handleOps(e.target.value)
-    array.push(currentValue)
-    //Display the current full equation
-    longScreen.value = array[0] + currentValue
-    //check for the array value to ensure all is in order
-    repeatEqual = ""
-    console.log(array)}
 }))
 
 //Event listener to carry out a function if "=" is click 
 operations.addEventListener("click",()=>{
     // check if there is a finalResult, and if "=" is press again, use the recent finalResult and carry out the equation again
-    if(repeatEqual = "yes"){
-        longScreen.value = array[0] + array[1] + currentValue + "="
-        finalResult = operation(array[0],array[1],currentValue)
+    if(repeatEqual == "yes"){
+        finalResult = operation(array[0],array[1],valueForRepeteadEqual)
+        longScreen.value = array[0] + array[1] + valueForRepeteadEqual + "="
         screen.value=finalResult
         array[0] = finalResult
         finalResult = ""
         equal = "="
     }
     
+    // First time "=" is press on
     else{
         finalResult = operation(array[0],array[1],currentValue)
         longScreen.value = array[0] + array[1] + currentValue + "="
         screen.value = finalResult
         array[0] = finalResult
         finalResult = ""
+        valueForRepeteadEqual = currentValue
+        currentValue = ""
         equal = "="
         repeatEqual = "yes"
     }
@@ -139,27 +142,28 @@ decimal.addEventListener("click",()=>{
 })
 
 function handleNumber(num){
-    // Reset currentValue to "" so it can accomodate up to 5 numbers
-    if(previousValue){
-        previousValue = ""
-        currentValue = ""
-    }
-    if (currentValue.length <=5){
-    currentValue += num
-}}
 
+    if (0<=currentValue.length && currentValue.length <5){
+    currentValue += num
+    }}
 
 function handleOps(ops){
-    // Check if there is an existing operator, if so replace it in array and longScreen as well
-    if(array.length > 1){
+
+    // 1st time when an operator is pressed on
+    if(array.length < 1){
+        array.push(currentValue)
         currentValue = ops
-        array[1] = currentValue
-        screen.value = ""
+        array.push (currentValue)
+        currentValue = ""
     }
-    else{previousValue = currentValue
-    array.push(previousValue)
-    currentValue = ops
-    screen.value =""}
+
+    // Check if there is an existing operator, if so replace it in array and longScreen as well
+    else if(array.length > 1){
+        currentValue = ops
+        array.pop()
+        array.push(currentValue)
+        currentValue = ""
+    }
 }
 
 
