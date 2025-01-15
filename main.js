@@ -41,6 +41,7 @@ let currentValue = ""
 let finalResult = ""
 let equal = ""
 let repeatEqual = ""
+let decimalActive = ""
 
 const numbers = document.querySelectorAll("#numbers")
 
@@ -73,6 +74,7 @@ operators.forEach((operator) => operator.addEventListener("click", (e)=>{
         longScreen.value = array[0] + array[1]
         //check for the array value to ensure all is in order
         repeatEqual = ""
+        decimalActive = ""
     }
 
     // Change the operators in the end if there is a number infront
@@ -82,18 +84,19 @@ operators.forEach((operator) => operator.addEventListener("click", (e)=>{
         longScreen.value = array[0] + array[1]
         //check for the array value to ensure all is in order
         repeatEqual = ""
-        console.log(array)
+        decimalActive = ""
     }
 
     // If there is an existing equation such as "4-5" and the operators is click on again, it will continue the equation if a new number is type in
     else if(array.length ==2 && currentValue){
         finalResult = operation(array[0],array[1],currentValue)
-        screen.value = finalResult
+        screen.value = finalResult.toFixed(3)
         array[0] = finalResult
         handleOps(e.target.value)
         longScreen.value = finalResult + array[1]
         equal = ""
         repeatEqual = "" 
+        decimalActive = ""
     }
 
 
@@ -104,24 +107,39 @@ operations.addEventListener("click",()=>{
     // check if there is a finalResult, and if "=" is press again, use the recent finalResult and carry out the equation again
     if(repeatEqual == "yes"){
         finalResult = operation(array[0],array[1],valueForRepeteadEqual)
-        longScreen.value = array[0] + array[1] + valueForRepeteadEqual + "="
-        screen.value=finalResult
+        longScreen.value = array[0].toFixed(3) + array[1] + valueForRepeteadEqual + "="
+        screen.value=finalResult.toFixed(3)
         array[0] = finalResult
         finalResult = ""
         equal = "="
+        decimalActive = ""
     }
     
     // First time "=" is press on
-    else{
+    else if (array.length == 2 && currentValue !=0 ){
         finalResult = operation(array[0],array[1],currentValue)
         longScreen.value = array[0] + array[1] + currentValue + "="
-        screen.value = finalResult
+        screen.value = finalResult.toFixed(3)
         array[0] = finalResult
         finalResult = ""
         valueForRepeteadEqual = currentValue
         currentValue = ""
         equal = "="
         repeatEqual = "yes"
+        decimalActive = ""
+    }
+
+    else if(array[1] == "/" && screen.value == 0){
+        screen.value = "cannot divide by zero"
+        longScreen.value = ""
+        array = []
+        ops = ""
+        previousValue = ""
+        currentValue = ""
+        finalResult = ""
+        equal = ""
+        decimalActive = ""
+
     }
 })
 
@@ -134,11 +152,15 @@ clear.addEventListener("click",()=>{
     equal = ""
     screen.value = ""
     longScreen.value = ""
+    decimalActive = ""
 })
 
 decimal.addEventListener("click",()=>{
-   currentValue = currentValue+"."
-   screen.value = currentValue
+    if(!decimalActive){
+        currentValue = currentValue+"."
+        screen.value = currentValue
+        decimalActive = 1
+    }
 })
 
 function handleNumber(num){
@@ -165,5 +187,3 @@ function handleOps(ops){
         currentValue = ""
     }
 }
-
-
